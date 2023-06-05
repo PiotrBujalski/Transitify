@@ -4,51 +4,52 @@
 @{
     ViewData["Title"] = "Create Ticket";
 }
+<div class="container">
+    <h1>Utwórz bilet</h1>
 
-<h1>Create Ticket</h1>
+    <form method="post">
+        <div class="form-group">
+            <label asp-for="Ticket.TicketType">Ticket Type</label>
+            <select asp-for="Ticket.TicketType" class="form-control">
+                <option value="Normal">Normalny</option>
+                <option value="Reduced">Ulgowy</option>
+            </select>
+            <span asp-validation-for="Ticket.TicketType" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Ticket.TicketGroup">Ticket Group</label>
+            <select asp-for="Ticket.TicketGroup" class="form-control">
+                <option value="Monthly">Miesięczny</option>
+                <option value="Weekly">Tygodniowy</option>
+                <option value="Disposable">Jednorazowy</option>
+            </select>
+            <span asp-validation-for="Ticket.TicketGroup" class="text-danger"></span>
+        </div>
+        <div class="form-group" id="ticketTimeMinutesGroup">
+            <label asp-for="Ticket.TicketTimeMinutes">Ticket Time (in minutes)</label>
+            <select asp-for="Ticket.TicketTimeMinutes" class="form-control">
+                <option value="20">20 minut</option>
+                <option value="40">40 minut</option>
+            </select>
+            <span asp-validation-for="Ticket.TicketTimeMinutes" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Dodaj</button>
+    </form>
+</div>
 
-<form method="post">
-    <div class="form-group">
-        <label asp-for="Ticket.TicketType">Ticket Type</label>
-        <select asp-for="Ticket.TicketType" class="form-control">
-            <option value="Normal">Normal</option>
-            <option value="Reduced">Reduced</option>
-        </select>
-        <span asp-validation-for="Ticket.TicketType" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Ticket.TicketGroup">Ticket Group</label>
-        <select asp-for="Ticket.TicketGroup" class="form-control">
-            <option value="Monthly">Monthly</option>
-            <option value="Weekly">Weekly</option>
-            <option value="Disposable">Disposable</option>
-        </select>
-        <span asp-validation-for="Ticket.TicketGroup" class="text-danger"></span>
-    </div>
-    <div class="form-group" id="ticketTimeMinutesGroup">
-        <label asp-for="Ticket.TicketTimeMinutes">Ticket Time (in minutes)</label>
-        <select asp-for="Ticket.TicketTimeMinutes" class="form-control">
-            <option value="20">20 minut</option>
-            <option value="40">40 minut</option>
-        </select>
-        <span asp-validation-for="Ticket.TicketTimeMinutes" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Create</button>
-</form>
+    @section Scripts {
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var ticketGroupSelect = document.getElementById('Ticket_TicketGroup');
+                var ticketTimeMinutesGroup = document.getElementById('ticketTimeMinutesGroup');
 
-@section Scripts {
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var ticketGroupSelect = document.getElementById('Ticket_TicketGroup');
-            var ticketTimeMinutesGroup = document.getElementById('ticketTimeMinutesGroup');
+                function handleTicketGroupChange() {
+                    var selectedOption = ticketGroupSelect.value;
+                    ticketTimeMinutesGroup.style.display = (selectedOption === 'Disposable') ? 'block' : 'none';
+                }
 
-            function handleTicketGroupChange() {
-                var selectedOption = ticketGroupSelect.value;
-                ticketTimeMinutesGroup.style.display = (selectedOption === 'Disposable') ? 'block' : 'none';
-            }
-
-            ticketGroupSelect.addEventListener('change', handleTicketGroupChange);
-            handleTicketGroupChange();
-        });
-    </script>
-}
+                ticketGroupSelect.addEventListener('change', handleTicketGroupChange);
+                handleTicketGroupChange();
+            });
+        </script>
+    }

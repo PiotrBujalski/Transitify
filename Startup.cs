@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using Transitify.Data;
 
 namespace Transitify
@@ -28,6 +29,13 @@ namespace Transitify
                 options.LoginPath = "/Account/Login";
                 options.LogoutPath = "/Account/Logout";
             });
+            services.AddSession(options =>
+            {
+                // Configure session options if needed
+                options.Cookie.Name = "YourSessionCookieName";
+                options.IdleTimeout = TimeSpan.FromMinutes(20);
+                // ... other options
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -48,6 +56,7 @@ namespace Transitify
             app.UseRouting();
 
             app.UseAuthentication();
+            app.UseSession();
 
             app.UseAuthorization();
 

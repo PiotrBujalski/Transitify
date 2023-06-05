@@ -19,9 +19,13 @@ namespace Transitify.Pages
             _logger = logger;
         }
 
-        public async Task OnGetAsync()
+        public void OnGet()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
         }
+        //public async Task OnGetAsync()
+        //{
+        //    //await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        //}
     }
 }
