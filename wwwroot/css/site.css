@@ -72,7 +72,7 @@ body {
 
 /*Added*/
 
-img {
+/*img {
     position: fixed;
     top: 0;
     left: 0;
@@ -80,4 +80,4 @@ img {
     height: 100vh;
     object-fit: cover;
     z-index: -1;
-}
+}*/

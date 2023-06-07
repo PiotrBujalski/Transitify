@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -17,9 +17,12 @@ namespace Transitify.Pages.Account
         private readonly MongoDbContext _dbContext;
 
         [BindProperty]
+        [Required(ErrorMessage = "Username is required.")]
         public string Username { get; set; }
 
         [BindProperty]
+        [DataType(DataType.Password)]
+        [Required(ErrorMessage = "Password is required.")]
         public string Password { get; set; }
 
         public LoginModel(MongoDbContext dbContext)
@@ -38,9 +41,21 @@ namespace Transitify.Pages.Account
         public async Task<IActionResult> OnPostAsync()
         {
             var user = _dbContext.Users.Find(u => u.Username == Username).FirstOrDefault();
-            if (user == null || !BCrypt.Net.BCrypt.Verify(Password, user.PasswordHash))
+            if (user == null)
             {
-                ModelState.AddModelError(string.Empty, "Invalid username or password.");
+                ModelState.AddModelError("Username", "Invalid username.");
+                return Page();
+            }
+
+            if (string.IsNullOrWhiteSpace(Password))
+            {
+                ModelState.AddModelError(string.Empty, "Password is required.");
+                return Page();
+            }
+
+            if (!BCrypt.Net.BCrypt.Verify(Password, user.PasswordHash))
+            {
+                ModelState.AddModelError("Password", "Invalid password.");
                 return Page();
             }
 

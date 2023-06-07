@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-
-
 using MongoDB.Driver;
 using Transitify.Data;
 using Transitify.Models;
@@ -27,7 +22,7 @@ namespace Transitify.Pages.Account
         [DataType(DataType.Password)]
         [Required(ErrorMessage = "Password is required.")]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9]+$", ErrorMessage = "Password must contain lowercase letter, uppercase letter and number.")]
-        [StringLength(30, MinimumLength = 8, ErrorMessage = "Password must be between 8 and 20 characters.")]
+        [StringLength(30, MinimumLength = 8, ErrorMessage = "Password must be between 8 and 30 characters.")]
         public string Password { get; set; }
 
         [BindProperty]
@@ -35,13 +30,8 @@ namespace Transitify.Pages.Account
         [Required(ErrorMessage = "You must repeat your password.")]
         [Compare("Password", ErrorMessage = "The passwords do not match.")]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9]+$", ErrorMessage = "Password must contain lowercase letter, uppercase letter and number.")]
-        [StringLength(30, MinimumLength = 8, ErrorMessage = "Password must be between 8 and 20 characters.")]
+        [StringLength(30, MinimumLength = 8, ErrorMessage = "Password must be between 8 and 30 characters.")]
         public string RepeatPassword { get; set; }
-
-        [BindProperty]
-        [Required(ErrorMessage = "Age is required.")]
-        [Range(18, 100, ErrorMessage = "Age must be between 18 and 200.")]
-        public int Age { get; set; }
 
         public RegisterModel(MongoDbContext dbContext)
         {
@@ -79,10 +69,7 @@ namespace Transitify.Pages.Account
             {
                 UserId = userId,
                 Username = Username,
-                PasswordHash = passwordHash,
-                Age = Age,
-                //TicketIds = null,
-                //UsedTicketIds = null
+                PasswordHash = passwordHash
             };
 
             _dbContext.Users.InsertOne(newUser);

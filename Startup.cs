@@ -26,15 +26,8 @@ namespace Transitify
             .AddCookie(options =>
             {
                 options.Cookie.Name = "MyCookie";
-                options.LoginPath = "/Account/Login";
-                options.LogoutPath = "/Account/Logout";
-            });
-            services.AddSession(options =>
-            {
-                // Configure session options if needed
-                options.Cookie.Name = "YourSessionCookieName";
-                options.IdleTimeout = TimeSpan.FromMinutes(20);
-                // ... other options
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+                options.SlidingExpiration = true;
             });
         }
 
@@ -51,14 +44,14 @@ namespace Transitify
             }
 
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
 
             app.UseRouting();
 
             app.UseAuthentication();
-            app.UseSession();
 
-            app.UseAuthorization();
+            app.UseAuthorization();       
 
             app.UseEndpoints(endpoints =>
             {

@@ -2,54 +2,53 @@
 @model Transitify.Pages.Tickets.CreateModel
 
 @{
-    ViewData["Title"] = "Create Ticket";
+    ViewData["Title"] = "Dodaj bilet";
 }
-<div class="container">
-    <h1>Utwórz bilet</h1>
 
-    <form method="post">
-        <div class="form-group">
-            <label asp-for="Ticket.TicketType">Ticket Type</label>
-            <select asp-for="Ticket.TicketType" class="form-control">
-                <option value="Normal">Normalny</option>
-                <option value="Reduced">Ulgowy</option>
-            </select>
-            <span asp-validation-for="Ticket.TicketType" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="Ticket.TicketGroup">Ticket Group</label>
-            <select asp-for="Ticket.TicketGroup" class="form-control">
-                <option value="Monthly">Miesięczny</option>
-                <option value="Weekly">Tygodniowy</option>
-                <option value="Disposable">Jednorazowy</option>
-            </select>
-            <span asp-validation-for="Ticket.TicketGroup" class="text-danger"></span>
-        </div>
-        <div class="form-group" id="ticketTimeMinutesGroup">
-            <label asp-for="Ticket.TicketTimeMinutes">Ticket Time (in minutes)</label>
-            <select asp-for="Ticket.TicketTimeMinutes" class="form-control">
-                <option value="20">20 minut</option>
-                <option value="40">40 minut</option>
-            </select>
-            <span asp-validation-for="Ticket.TicketTimeMinutes" class="text-danger"></span>
-        </div>
-        <button type="submit" class="btn btn-primary">Dodaj</button>
-    </form>
-</div>
+<h1>Utwórz bilet</h1>
 
-    @section Scripts {
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                var ticketGroupSelect = document.getElementById('Ticket_TicketGroup');
-                var ticketTimeMinutesGroup = document.getElementById('ticketTimeMinutesGroup');
+<form method="post">
+    <div class="form-group">
+        <label asp-for="Ticket.TicketType">Typ biletu</label>
+        <select asp-for="Ticket.TicketType" class="form-control">
+            <option value="Normalny">Normalny</option>
+            <option value="Ulgowy">Ulgowy</option>
+        </select>
+        <span asp-validation-for="Ticket.TicketType" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Ticket.TicketGroup">Okres biletu</label>
+        <select asp-for="Ticket.TicketGroup" class="form-control">
+            <option value="Miesieczny">Miesięczny</option>
+            <option value="Tygodniowy">Tygodniowy</option>
+            <option value="Jednorazowy">Jednorazowy</option>
+        </select>
+        <span asp-validation-for="Ticket.TicketGroup" class="text-danger"></span>
+    </div>
+    <div class="form-group" id="ticketTimeMinutesGroup">
+        <label asp-for="Ticket.TicketTimeMinutes">Czas biletu</label>
+        <select asp-for="Ticket.TicketTimeMinutes" class="form-control">
+            <option value="20">20 minut</option>
+            <option value="40">40 minut</option>
+        </select>
+        <span asp-validation-for="Ticket.TicketTimeMinutes" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Dodaj</button>
+</form>
 
-                function handleTicketGroupChange() {
-                    var selectedOption = ticketGroupSelect.value;
-                    ticketTimeMinutesGroup.style.display = (selectedOption === 'Disposable') ? 'block' : 'none';
-                }
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var ticketGroupSelect = document.getElementById('Ticket_TicketGroup');
+            var ticketTimeMinutesGroup = document.getElementById('ticketTimeMinutesGroup');
 
-                ticketGroupSelect.addEventListener('change', handleTicketGroupChange);
-                handleTicketGroupChange();
-            });
-        </script>
-    }
+            function handleTicketGroupChange() {
+                var selectedOption = ticketGroupSelect.value;
+                ticketTimeMinutesGroup.style.display = (selectedOption === 'Jednorazowy') ? 'block' : 'none';
+            }
+
+            ticketGroupSelect.addEventListener('change', handleTicketGroupChange);
+            handleTicketGroupChange();
+        });
+    </script>
+}

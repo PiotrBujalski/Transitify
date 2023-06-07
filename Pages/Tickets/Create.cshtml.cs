@@ -42,13 +42,13 @@ namespace Transitify.Pages.Tickets
 
             Ticket.TicketId = GetNextTicketId();
 
-            if (Ticket.TicketGroup == "Monthly")
+            if (Ticket.TicketGroup == "Miesieczny")
             {
-                Ticket.TicketTimeMinutes = 30 * 24 * 60; // 30 days
+                Ticket.TicketTimeMinutes = 30 * 24 * 60;
             }
-            else if (Ticket.TicketGroup == "Weekly")
+            else if (Ticket.TicketGroup == "Tygodniowy")
             {
-                Ticket.TicketTimeMinutes = 7 * 24 * 60; // 7 days
+                Ticket.TicketTimeMinutes = 7 * 24 * 60;
             }
 
             _dbContext.Tickets.InsertOne(Ticket);

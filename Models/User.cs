@@ -1,9 +1,5 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Transitify.Models
 {
@@ -21,14 +17,5 @@ namespace Transitify.Models
 
         [BsonElement("PasswordHash")]
         public string PasswordHash { get; set; }
-
-        [BsonElement("Age")]
-        public int Age { get; set; }
-
-        //[BsonElement("TicketIds")]
-        //public List<string> TicketIds { get; set; }
-
-        //[BsonElement("UsedTicketIds")]
-        //public List<string> UsedTicketIds { get; set; }
     }
 }
