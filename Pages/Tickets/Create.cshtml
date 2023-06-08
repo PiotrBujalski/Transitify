@@ -5,9 +5,88 @@
     ViewData["Title"] = "Dodaj bilet";
 }
 
-<h1>Utwórz bilet</h1>
+<style>
+    .page-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+    }
 
-<form method="post">
+        .page-background img {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+        }
+
+    .form-with-background {
+        padding: 20px;
+        background-color: rgba(88, 88, 88, 0.9);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+        .form-with-background label {
+            color: #ffffff;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .form-with-background input,
+        .form-with-background button {
+            background-color: rgba(122, 122, 122, 0.8);
+            color: #ffffff;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 12px;
+            font-size: 14px;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .form-with-background .text-danger {
+            color: red;
+            font-weight: bold;
+        }
+
+        .form-with-background h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .form-with-background button {
+            background-color: #0056b3;
+            color: #ffffff;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+            .form-with-background button:hover {
+                background-color: #007bff;
+            }
+</style>
+
+<div class="page-background">
+    <img src="~/images/original_tram.png" />
+</div>
+
+<form method="post" class="form-with-background">
+    @if (Model.IsCreateSuccessful)
+    {
+        <div class="alert alert-success" role="alert">
+            Bilet dodano pomyślnie. Przejdź teraz do moich biletów.
+            <a asp-area="" asp-page="/Index" class="alert-link">Moje bilety!</a>
+        </div>
+    }
+    <h1>Dodaj nowy bilet do swojej listy biletów</h1>
     <div class="form-group">
         <label asp-for="Ticket.TicketType">Typ biletu</label>
         <select asp-for="Ticket.TicketType" class="form-control">
@@ -33,7 +112,7 @@
         </select>
         <span asp-validation-for="Ticket.TicketTimeMinutes" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Dodaj</button>
+    <button type="submit" class="btn btn-primary">Utwórz</button>
 </form>
 
 @section Scripts {

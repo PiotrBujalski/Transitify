@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
@@ -17,12 +17,12 @@ namespace Transitify.Pages.Account
         private readonly MongoDbContext _dbContext;
 
         [BindProperty]
-        [Required(ErrorMessage = "Username is required.")]
+        [Required(ErrorMessage = "Nazwa użytkownika jest wymagana.")]
         public string Username { get; set; }
 
         [BindProperty]
         [DataType(DataType.Password)]
-        [Required(ErrorMessage = "Password is required.")]
+        [Required(ErrorMessage = "Hasło jest wymagane.")]
         public string Password { get; set; }
 
         public LoginModel(MongoDbContext dbContext)
@@ -34,7 +34,7 @@ namespace Transitify.Pages.Account
         {
             if (User.Identity.IsAuthenticated)
             {
-                return Redirect("/Privacy");
+                return Redirect("/Index");
             }
             return Page();
         }
@@ -43,25 +43,26 @@ namespace Transitify.Pages.Account
             var user = _dbContext.Users.Find(u => u.Username == Username).FirstOrDefault();
             if (user == null)
             {
-                ModelState.AddModelError("Username", "Invalid username.");
+                ModelState.AddModelError("Username", "Nieprawidłowa nazwa użytkownika.");
                 return Page();
             }
 
             if (string.IsNullOrWhiteSpace(Password))
             {
-                ModelState.AddModelError(string.Empty, "Password is required.");
+                ModelState.AddModelError(string.Empty, "Hasło jest wymagane.");
                 return Page();
             }
 
             if (!BCrypt.Net.BCrypt.Verify(Password, user.PasswordHash))
             {
-                ModelState.AddModelError("Password", "Invalid password.");
+                ModelState.AddModelError("Password", "Nieprawidłowe hasło.");
                 return Page();
             }
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                new Claim(ClaimTypes.Name, user.Username)
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

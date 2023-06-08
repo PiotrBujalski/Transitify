@@ -5,38 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Transitify</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-page="/Index">
-                    Transitify
+                    <img src="~/images/logo.png" class="img-fluid" alt="Logo" width="150" height="50" />
                 </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <a class="navbar-brand" asp-area="" asp-page="/Index">Strona główna</a>
+                    <a class="navbar-brand" asp-area="" asp-page="/Privacy">Polityka</a>
+                }
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a class="navbar-brand" asp-area="" asp-page="/Index">Moje bilety</a>
+                }
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
+                    <ul class="navbar-nav">
                         @if (!User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Login">Login</a>
+                                <a class="btn btn-secondary ml-2" asp-area="" asp-page="/Account/Login">Login</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Register">Rejestracja</a>
+                                <a class="btn btn-secondary ml-2" asp-area="" asp-page="/Account/Register">Rejestracja</a>
                             </li>
-
                         }
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Tickets/Create">Dodaj bilet</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Logout">Wyloguj</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-white bg-dark px-3 rounded-pill" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Witaj @User.Identity.Name!
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="userDropdown">
+                                    <button type="button" class="dropdown-item" onclick="window.location.href='@Url.Page("/Tickets/Create")'">Utwórz bilet</button>
+                                    <form method="post" asp-page="/Account/Logout">
+                                        <button type="submit" class="dropdown-item">Wyloguj</button>
+                                    </form>
+                                </div>
                             </li>
                         }
                     </ul>
@@ -48,7 +56,7 @@
     <div class="container flex-grow-1">
         <main role="main">
             <div class="row">
-                <div class="col">                    
+                <div class="col">
                     @RenderBody()
                 </div>
             </div>

@@ -15,6 +15,9 @@ namespace Transitify.Pages.Tickets
         [BindProperty]
         public Ticket Ticket { get; set; }
 
+        [TempData]
+        public bool IsCreateSuccessful { get; set; }
+
         public CreateModel(MongoDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -42,18 +45,50 @@ namespace Transitify.Pages.Tickets
 
             Ticket.TicketId = GetNextTicketId();
 
-            if (Ticket.TicketGroup == "Miesieczny")
+            Ticket.IsActive = false;
+
+            if (Ticket.TicketGroup == "Miesieczny" && Ticket.TicketType == "Normalny")
             {
                 Ticket.TicketTimeMinutes = 30 * 24 * 60;
+                Ticket.TicketPrice = 168;
             }
-            else if (Ticket.TicketGroup == "Tygodniowy")
+            else if (Ticket.TicketGroup == "Miesieczny" && Ticket.TicketType == "Ulgowy")
+            {
+                Ticket.TicketTimeMinutes = 30 * 24 * 60;
+                Ticket.TicketPrice = 84;
+            }
+            else if (Ticket.TicketGroup == "Tygodniowy" && Ticket.TicketType == "Normalny")
             {
                 Ticket.TicketTimeMinutes = 7 * 24 * 60;
+                Ticket.TicketPrice = 36;
+            }
+            else if (Ticket.TicketGroup == "Tygodniowy" && Ticket.TicketType == "Ulgowy")
+            {
+                Ticket.TicketTimeMinutes = 7 * 24 * 60;
+                Ticket.TicketPrice = 18;
+            }
+            else if (Ticket.TicketGroup == "Jednorazowy" && Ticket.TicketType == "Normalny" && Ticket.TicketTimeMinutes == 20)
+            {
+                Ticket.TicketPrice = 4.4m;
+            }
+            else if (Ticket.TicketGroup == "Jednorazowy" && Ticket.TicketType == "Ulgowy" && Ticket.TicketTimeMinutes == 20)
+            {
+                Ticket.TicketPrice = 2.2m;
+            }
+            else if (Ticket.TicketGroup == "Jednorazowy" && Ticket.TicketType == "Normalny" && Ticket.TicketTimeMinutes == 40)
+            {
+                Ticket.TicketPrice = 5.6m;
+            }
+            else if (Ticket.TicketGroup == "Jednorazowy" && Ticket.TicketType == "Ulgowy" && Ticket.TicketTimeMinutes == 40)
+            {
+                Ticket.TicketPrice = 2.8m;
             }
 
             _dbContext.Tickets.InsertOne(Ticket);
 
-            return RedirectToPage("/Index");
+            IsCreateSuccessful = true;
+
+            return Page();
         }
 
         private int GetNextTicketId()

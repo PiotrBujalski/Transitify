@@ -1,7 +1,7 @@
 ﻿@page
 @model Transitify.Pages.Account.RegisterModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Rejestracja";
 }
 
 <style>
@@ -22,7 +22,7 @@
 
     .form-with-background {
         padding: 20px;
-        background-color: rgba(88, 88, 88, 0.5);
+        background-color: rgba(88, 88, 88, 0.9);
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         max-width: 400px;
@@ -50,6 +50,7 @@
 
         .form-with-background .text-danger {
             color: red;
+            font-weight: bold;
         }
 
         .form-with-background h1 {
@@ -63,6 +64,7 @@
             background-color: #0056b3;
             color: #ffffff;
             cursor: pointer;
+            font-weight: bold;
             transition: background-color 0.3s ease;
         }
 
@@ -76,6 +78,13 @@
 </div>
 
 <form method="post" class="form-with-background">
+    @if (Model.IsRegistrationSuccessful)
+    {
+        <div class="alert alert-success" role="alert">
+            Rejestracja przebiegła pomyślnie. Przejdź teraz do okna z logowaniem.
+            <a asp-area="" asp-page="/Account/Login" class="alert-link">Zaloguj się!</a>
+        </div>
+    }
     <h1>Rejestracja</h1>
     <div class="form-group">
         <label asp-for="Username">Nazwa użytkownika</label>
@@ -94,3 +103,16 @@
     </div>
     <button type="submit" class="btn btn-primary">Zarejestruj się</button>
 </form>
+
+<script>
+    @if (Model.IsRegistrationSuccessful)
+    {
+        <text>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('input').forEach(function (input) {
+                input.value = '';
+            });
+        });
+        </text>
+    }
+</script>

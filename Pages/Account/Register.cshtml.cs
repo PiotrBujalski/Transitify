@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,25 +13,28 @@ namespace Transitify.Pages.Account
         private readonly MongoDbContext _dbContext;
 
         [BindProperty]
-        [Required(ErrorMessage = "Username is required.")]
-        [RegularExpression(@"^[a-zA-Z0-9]+$", ErrorMessage = "Username may contain only numbers, uppercase and lowercase letters.")]
-        [StringLength(30, MinimumLength = 5, ErrorMessage = "Username must be between 5 and 30 characters.")]
+        [Required(ErrorMessage = "Nazwa użytkownika jest wymagana.")]
+        [RegularExpression(@"^[a-zA-Z0-9]+$", ErrorMessage = "Nazwa użytkownika może zawierać jedynie małe litery, duże litery i cyfry.")]
+        [StringLength(30, MinimumLength = 4, ErrorMessage = "Nazwa użytkownika musi mieć od 4 do 30 znaków.")]
         public string Username { get; set; }
 
         [BindProperty]
         [DataType(DataType.Password)]
-        [Required(ErrorMessage = "Password is required.")]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9]+$", ErrorMessage = "Password must contain lowercase letter, uppercase letter and number.")]
-        [StringLength(30, MinimumLength = 8, ErrorMessage = "Password must be between 8 and 30 characters.")]
+        [Required(ErrorMessage = "Hasło jest wymagane.")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9]+$", ErrorMessage = "Hasło musi zawierać przynajmniej jedną: małą literę, dużą literę i cyfrę.")]
+        [StringLength(30, MinimumLength = 6, ErrorMessage = "Hasło musi mieć od 6 do 30 znaków.")]
         public string Password { get; set; }
 
         [BindProperty]
         [DataType(DataType.Password)]
-        [Required(ErrorMessage = "You must repeat your password.")]
-        [Compare("Password", ErrorMessage = "The passwords do not match.")]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9]+$", ErrorMessage = "Password must contain lowercase letter, uppercase letter and number.")]
-        [StringLength(30, MinimumLength = 8, ErrorMessage = "Password must be between 8 and 30 characters.")]
+        [Required(ErrorMessage = "Powtórzenie hasła jest wymagane.")]
+        [Compare("Password", ErrorMessage = "Wprowadzone hasła nie są identyczne.")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9]+$", ErrorMessage = "Hasło musi zawierać przynajmniej jedną: małą literę, dużą literę i cyfrę.")]
+        [StringLength(30, MinimumLength = 6, ErrorMessage = "Hasło musi mieć od 6 do 30 znaków.")]
         public string RepeatPassword { get; set; }
+
+        [TempData]
+        public bool IsRegistrationSuccessful { get; set; }
 
         public RegisterModel(MongoDbContext dbContext)
         {
@@ -42,7 +45,7 @@ namespace Transitify.Pages.Account
         {
             if (User.Identity.IsAuthenticated)
             {
-                return Redirect("/Privacy");
+                return Redirect("/Index");
             }
             return Page();
         }
@@ -57,7 +60,7 @@ namespace Transitify.Pages.Account
             var user = _dbContext.Users.Find(u => u.Username == Username).FirstOrDefault();
             if (user != null)
             {
-                ModelState.AddModelError("Username", "Username is already taken.");
+                ModelState.AddModelError("Username", "Podana nazwa użytkownika już istnieje.");
                 return Page();
             }
 
@@ -74,7 +77,9 @@ namespace Transitify.Pages.Account
 
             _dbContext.Users.InsertOne(newUser);
 
-            return RedirectToPage("/Index");
+            IsRegistrationSuccessful = true;
+
+            return Page();
         }
         private int GetNextUserId()
         {

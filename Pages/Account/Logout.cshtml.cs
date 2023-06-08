@@ -10,11 +10,12 @@ namespace Transitify.Pages.Account
     {
         public IActionResult OnGet()
         {
-            if (!User.Identity.IsAuthenticated)
-            {
-                return Redirect("/Account/Login");
-            }
-            return Page();
+            //if (!User.Identity.IsAuthenticated)
+            //{
+            //    return Redirect("/Account/Login");
+            //}
+            //return Page();
+            return Redirect("/Account/Login");
         }
         public async Task<IActionResult> OnPostAsync()
         {

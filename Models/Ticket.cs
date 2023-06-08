@@ -18,21 +18,28 @@ namespace Transitify.Models
         public int TicketId { get; set; }
 
         [BsonElement("TicketType")]
-        [Required(ErrorMessage = "Please select a ticket type.")]
+        [Required]
         public string TicketType { get; set; }
 
         [BsonElement("TicketGroup")]
-        [Required(ErrorMessage = "Please select a ticket group.")]
+        [Required]
         public string TicketGroup { get; set; }
 
         [BsonElement("TicketTimeMinutes")]
-        [Required(ErrorMessage = "Please enter the ticket time in minutes.")]
+        [Required]
         public int TicketTimeMinutes { get; set; }
 
-        [BsonElement("TicketActivationTime")]
-        public DateTime? TicketActivationTime { get; set; }
+        [BsonElement("TicketPrice")]
+        [Required]
+        public decimal TicketPrice { get; set; }
+
+        [BsonElement("TicketActivationDate")]
+        public DateTime? TicketActivationDate { get; set; }
+
+        [BsonElement("TicketExpirationDate")]
+        public DateTime? TicketExpirationDate { get; set; }
 
         [BsonElement("IsActive")]
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
     }
 }
