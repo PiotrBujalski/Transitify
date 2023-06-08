@@ -16,11 +16,12 @@
                 @if (!User.Identity.IsAuthenticated)
                 {
                     <a class="navbar-brand" asp-area="" asp-page="/Index">Strona główna</a>
-                    <a class="navbar-brand" asp-area="" asp-page="/Privacy">Polityka</a>
+                    <a class="navbar-brand" asp-area="" asp-page="/Privacy">Polityka prywatności</a>
                 }
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <a class="navbar-brand" asp-area="" asp-page="/Index">Moje bilety</a>
+                    <a class="navbar-brand" asp-area="" asp-page="/Tickets/MyTickets">Moje bilety</a>
+                    <a class="navbar-brand" asp-area="" asp-page="/Tickets/Create">Utwórz bilet</a>
                 }
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
                     <ul class="navbar-nav">
@@ -40,6 +41,7 @@
                                     Witaj @User.Identity.Name!
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="userDropdown">
+                                    <button type="button" class="dropdown-item" onclick="window.location.href='@Url.Page("/Tickets/MyTickets")'">Moje bilety</button>
                                     <button type="button" class="dropdown-item" onclick="window.location.href='@Url.Page("/Tickets/Create")'">Utwórz bilet</button>
                                     <form method="post" asp-page="/Account/Logout">
                                         <button type="submit" class="dropdown-item">Wyloguj</button>

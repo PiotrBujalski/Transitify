@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MongoDB.Driver;
 using System.Linq;
@@ -47,12 +47,12 @@ namespace Transitify.Pages.Tickets
 
             Ticket.IsActive = false;
 
-            if (Ticket.TicketGroup == "Miesieczny" && Ticket.TicketType == "Normalny")
+            if (Ticket.TicketGroup == "Miesięczny" && Ticket.TicketType == "Normalny")
             {
                 Ticket.TicketTimeMinutes = 30 * 24 * 60;
                 Ticket.TicketPrice = 168;
             }
-            else if (Ticket.TicketGroup == "Miesieczny" && Ticket.TicketType == "Ulgowy")
+            else if (Ticket.TicketGroup == "Miesięczny" && Ticket.TicketType == "Ulgowy")
             {
                 Ticket.TicketTimeMinutes = 30 * 24 * 60;
                 Ticket.TicketPrice = 84;

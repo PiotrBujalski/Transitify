@@ -79,13 +79,15 @@
 </div>
 
 <form method="post" class="form-with-background">
-    @if (Model.IsCreateSuccessful)
-    {
-        <div class="alert alert-success" role="alert">
-            Bilet dodano pomyślnie. Przejdź teraz do moich biletów.
-            <a asp-area="" asp-page="/Index" class="alert-link">Moje bilety!</a>
-        </div>
-    }
+    <div id="alertContainer">
+        @if (Model.IsCreateSuccessful)
+        {
+            <div id="alert" class="alert alert-success" role="alert">
+                Bilet dodano pomyślnie. Przejdź teraz do moich biletów.
+                <a asp-area="" asp-page="/Tickets/MyTickets" class="alert-link">Moje bilety!</a>
+            </div>
+        }
+    </div>
     <h1>Dodaj nowy bilet do swojej listy biletów</h1>
     <div class="form-group">
         <label asp-for="Ticket.TicketType">Typ biletu</label>
@@ -98,7 +100,7 @@
     <div class="form-group">
         <label asp-for="Ticket.TicketGroup">Okres biletu</label>
         <select asp-for="Ticket.TicketGroup" class="form-control">
-            <option value="Miesieczny">Miesięczny</option>
+            <option value="Miesięczny">Miesięczny</option>
             <option value="Tygodniowy">Tygodniowy</option>
             <option value="Jednorazowy">Jednorazowy</option>
         </select>
@@ -120,6 +122,8 @@
         document.addEventListener('DOMContentLoaded', function () {
             var ticketGroupSelect = document.getElementById('Ticket_TicketGroup');
             var ticketTimeMinutesGroup = document.getElementById('ticketTimeMinutesGroup');
+            var alertContainer = document.getElementById('alertContainer');
+            var alert = document.getElementById('alert');
 
             function handleTicketGroupChange() {
                 var selectedOption = ticketGroupSelect.value;
@@ -128,6 +132,16 @@
 
             ticketGroupSelect.addEventListener('change', handleTicketGroupChange);
             handleTicketGroupChange();
+
+            function removeAlert() {
+                if (alert) {
+                    alertContainer.removeChild(alert);
+                }
+            }
+
+            if (alert) {
+                alert.addEventListener('click', removeAlert);
+            }
         });
     </script>
 }

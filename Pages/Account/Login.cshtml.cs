@@ -34,7 +34,7 @@ namespace Transitify.Pages.Account
         {
             if (User.Identity.IsAuthenticated)
             {
-                return Redirect("/Index");
+                return Redirect("/Tickets/MyTickets");
             }
             return Page();
         }
@@ -71,7 +71,7 @@ namespace Transitify.Pages.Account
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity));
 
-            return RedirectToPage("/Index");
+            return RedirectToPage("/Tickets/MyTickets");
         }
     }
 }
