@@ -1,8 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MongoDB.Driver;
@@ -20,6 +19,9 @@ namespace Transitify.Pages.Tickets
         }
         public List<Ticket> Tickets { get; set; }
 
+        [TempData]
+        public int ErrorTicketId { get; set; }
+
         public IActionResult OnGet()
         {
             if (!User.Identity.IsAuthenticated)
@@ -32,7 +34,7 @@ namespace Transitify.Pages.Tickets
 
             return Page();
         }
-        public IActionResult OnPost(int ticketId, int ticketTimeMinutes, string handler)
+        public IActionResult OnPost(int ticketId, int ticketTimeMinutes, decimal ticketPrice, string handler)
         {
             var ticket = _dbContext.Tickets.Find(t => t.TicketId == ticketId).FirstOrDefault();
             if (ticket != null)
@@ -40,17 +42,51 @@ namespace Transitify.Pages.Tickets
                 
                 if (handler == "Activate")
                 {
-                    ticket.TicketActivationDate = DateTime.Now;
-                    ticket.TicketExpirationDate = DateTime.Now.AddMinutes(ticketTimeMinutes);
+                    ticket.TicketActivationDate = DateTime.Now.AddMinutes(120);
+                    ticket.TicketExpirationDate = DateTime.Now.AddMinutes(120+ticketTimeMinutes);
                     ticket.IsActive = true;
-                }
-                else if (handler == "Deactivate")
+                    _dbContext.Tickets.ReplaceOne(t => t.TicketId == ticketId, ticket);
+                }                
+                else if (handler == "Pay")
                 {
-                    ticket.TicketActivationDate = null;
-                    ticket.TicketExpirationDate = null;
-                    ticket.IsActive = false;
+                    int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                    User user = _dbContext.Users.Find(u => u.UserId == userId).FirstOrDefault();
+
+                    if (user != null)
+                    {
+                        if (user.Balance >= ticketPrice)
+                        {
+                            user.Balance -= ticketPrice;
+                            ticket.IsPaid = true;
+                            _dbContext.Users.ReplaceOne(u => u.UserId == userId, user);
+                        }
+                        else
+                        {
+                            ErrorTicketId = ticketId;
+                        }
+                    }
+                    _dbContext.Tickets.ReplaceOne(t => t.TicketId == ticketId, ticket);
                 }
-                _dbContext.Tickets.ReplaceOne(t => t.TicketId == ticketId, ticket);
+                else if (handler == "Delete")
+                {
+                    return OnPostDelete(ticketId);
+                }
+                //else if (handler == "Details")
+                //{
+                //    return OnPostDetails(ticketId);
+                //}
+                //_dbContext.Tickets.ReplaceOne(t => t.TicketId == ticketId, ticket);
+            }
+
+            return Redirect("/Tickets/MyTickets");
+        }
+
+        public IActionResult OnPostDelete(int ticketId)
+        {
+            var ticket = _dbContext.Tickets.Find(t => t.TicketId == ticketId).FirstOrDefault();
+            if (ticket != null)
+            {
+                _dbContext.Tickets.DeleteOne(t => t.TicketId == ticketId);
             }
 
             return Redirect("/Tickets/MyTickets");

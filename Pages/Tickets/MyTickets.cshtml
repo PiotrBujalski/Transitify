@@ -59,26 +59,6 @@
         font-weight: bold;
     }
 
-    .activate-button {
-        padding: 6px 12px;
-        background-color: green;
-        color: white;
-        border: none;
-        cursor: pointer;
-        font-size: 14px;
-        border-radius: 4px;
-    }
-
-    .deactivate-button {
-        padding: 6px 12px;
-        background-color: red;
-        color: white;
-        border: none;
-        cursor: pointer;
-        font-size: 14px;
-        border-radius: 4px;
-    }
-
     .no-tickets-message {
         color: white;
         font-weight: bold;
@@ -91,6 +71,20 @@
         max-width: 400px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
+
+    .error-message {
+        color: red;
+        font-weight: bold;
+        text-align: center;
+        margin: 10px;
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+
 </style>
 
 <div class="page-background">
@@ -111,8 +105,8 @@ else
                 <th>Okres biletu</th>
                 <th>Czas biletu</th>
                 <th>Cena</th>
-                <th>Data aktywacji</th>
                 <th>Data wygaśnięcia</th>
+                <th>Status</th>
                 <th>Stan biletu</th>
                 <th></th>
                 <th></th>
@@ -121,59 +115,90 @@ else
         <tbody>
             @foreach (var ticket in Model.Tickets)
             {
-            <tr>
-                <td>@ticket.TicketType</td>
-                <td>@ticket.TicketGroup</td>
-                <td>
-                    @if (ticket.TicketTimeMinutes == 20)
-                    {
-                        <span>20 minut</span>
-                    }
-                    else if (ticket.TicketTimeMinutes == 40)
-                    {
-                        <span>40 minut</span>
-                    }
-                    else if (ticket.TicketTimeMinutes == 10080)
-                    {
-                        <span>7 dni</span>
-                    }
-                    else if (ticket.TicketTimeMinutes == 43200)
-                    {
-                        <span>30 dni</span>
-                    }
-                </td>
-                <td>@ticket.TicketPrice zł</td>
-                <td>@ticket.TicketActivationDate</td>
-                <td>@ticket.TicketExpirationDate</td>
-                <td>
-                    @if (ticket.IsActive)
-                    {
-                        <span class="active">Aktywny</span>
-                    }
-                    else
-                    {
-                        <span class="inactive">Nieaktywny</span>
-                    }
-                </td>
-                <td>
-                    @if (!ticket.IsActive)
-                    {
-                        <form method="post" asp-page-handler="Activate">
-                            <input type="hidden" name="ticketId" value="@ticket.TicketId" />
-                            <input type="hidden" name="ticketTimeMinutes" value="@ticket.TicketTimeMinutes" />
-                            <button class="activate-button" type="submit">Aktywuj</button>
-                        </form>
-                    }
-                    else if (ticket.IsActive)
-                    {
-                        <form method="post" asp-page-handler="Deactivate">
-                            <input type="hidden" name="ticketId" value="@ticket.TicketId" />
-                            <button class="deactivate-button" type="submit">Dezaktywuj</button>
-                        </form>
-                    }
-                </td>
-                <td></td>
-            </tr>
+                <tr>
+                    <td>@ticket.TicketType</td>
+                    <td>@ticket.TicketGroup</td>
+                    <td>
+                        @if (ticket.TicketTimeMinutes == 20)
+                        {
+                            <span>20 minut</span>
+                        }
+                        else if (ticket.TicketTimeMinutes == 40)
+                        {
+                            <span>40 minut</span>
+                        }
+                        else if (ticket.TicketTimeMinutes == 10080)
+                        {
+                            <span>7 dni</span>
+                        }
+                        else if (ticket.TicketTimeMinutes == 43200)
+                        {
+                            <span>30 dni</span>
+                        }
+                    </td>
+                    <td>@ticket.TicketPrice zł</td>
+                    <td>@ticket.TicketExpirationDate</td>
+                    <td>
+                        @if (ticket.IsPaid)
+                        {
+                            <span class="active">Opłacony</span>
+                        }
+                        else if (!ticket.IsPaid)
+                        {
+                            <span class="inactive">Nieopłacony</span>
+                        }
+                    </td>
+                    <td>
+                        @if (!ticket.IsActive)
+                        {
+                            <span class="inactive">Nieaktywny</span>
+                        }
+                        else if (ticket.IsActive)
+                        {
+                            <span class="active">Aktywny</span>
+                        }
+                    </td>
+                    <td>
+                        @if (Model.ErrorTicketId == ticket.TicketId)
+                        {
+                            <p class="error-message">Brak środków na koncie.</p>
+                        }
+                        else
+                        {
+                            if (!ticket.IsPaid && !ticket.IsActive)
+                            {
+                                <div class="button-container">
+                                    <form method="post" asp-page-handler="Pay">
+                                        <input type="hidden" name="ticketId" value="@ticket.TicketId" />
+                                        <input type="hidden" name="ticketPrice" value="@ticket.TicketPrice" />
+                                        <button class="btn btn-warning" type="submit">Opłać</button>
+                                    </form>
+
+                                    <form method="post" asp-page-handler="Delete">
+                                        <input type="hidden" name="ticketId" value="@ticket.TicketId" />
+                                        <button class="btn btn-danger" type="submit">Usuń</button>
+                                    </form>
+                                </div>
+                            }
+                            else if (ticket.IsPaid && !ticket.IsActive)
+                            {
+                                <form method="post" asp-page-handler="Activate">
+                                    <input type="hidden" name="ticketId" value="@ticket.TicketId" />
+                                    <input type="hidden" name="ticketTimeMinutes" value="@ticket.TicketTimeMinutes" />
+                                    <button class="btn btn-success" type="submit">Aktywuj</button>
+                                </form>
+                            }
+                            else if (ticket.IsPaid && ticket.IsActive)
+                            {
+                                <form method="post" asp-page-handler="Details">
+                                    <input type="hidden" name="ticketId" value="@ticket.TicketId" />
+                                    <button class="btn btn-primary" type="submit">Pokaż</button>
+                                </form>
+                            }
+                        }
+                    </td>
+                    <td></td>
+                </tr>
             }
         </tbody>
     </table>
