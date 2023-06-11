@@ -32,14 +32,24 @@ namespace Transitify.Pages.Tickets
 
             return Page();
         }
-        public IActionResult OnPost(int ticketId, int ticketTimeMinutes)
+        public IActionResult OnPost(int ticketId, int ticketTimeMinutes, string handler)
         {
             var ticket = _dbContext.Tickets.Find(t => t.TicketId == ticketId).FirstOrDefault();
             if (ticket != null)
             {
-                ticket.TicketActivationDate = DateTime.Now;
-                ticket.TicketExpirationDate = DateTime.Now.AddMinutes(ticketTimeMinutes);
-                ticket.IsActive = true;
+                
+                if (handler == "Activate")
+                {
+                    ticket.TicketActivationDate = DateTime.Now;
+                    ticket.TicketExpirationDate = DateTime.Now.AddMinutes(ticketTimeMinutes);
+                    ticket.IsActive = true;
+                }
+                else if (handler == "Deactivate")
+                {
+                    ticket.TicketActivationDate = null;
+                    ticket.TicketExpirationDate = null;
+                    ticket.IsActive = false;
+                }
                 _dbContext.Tickets.ReplaceOne(t => t.TicketId == ticketId, ticket);
             }
 
