@@ -33,6 +33,18 @@ namespace Transitify.Pages.Account
         [StringLength(30, MinimumLength = 6, ErrorMessage = "Hasło musi mieć od 6 do 30 znaków.")]
         public string RepeatPassword { get; set; }
 
+        [BindProperty]
+        [Required(ErrorMessage = "Imię jest wymagane.")]
+        [RegularExpression(@"^[A-Z][a-z]+$", ErrorMessage = "Imię musi zaczynać się dużą literą. Pozostałe znaki mają być małymi literami.")]
+        [StringLength(30, MinimumLength = 3, ErrorMessage = "Imię musi mieć od 3 do 30 znaków.")]
+        public string Name { get; set; }
+
+        [BindProperty]
+        [Required(ErrorMessage = "Nazwisko jest wymagane.")]
+        [RegularExpression(@"^[A-Z][a-z]+$", ErrorMessage = "Nazwisko musi zaczynać się dużą literą. Pozostałe znaki mają być małymi literami.")]
+        [StringLength(30, MinimumLength = 3, ErrorMessage = "Nazwisko musi mieć od 3 do 30 znaków.")]
+        public string Surname { get; set; }
+
         [TempData]
         public bool IsRegistrationSuccessful { get; set; }
 
@@ -72,7 +84,9 @@ namespace Transitify.Pages.Account
             {
                 UserId = userId,
                 Username = Username,
-                PasswordHash = passwordHash
+                PasswordHash = passwordHash,
+                Name = Name,
+                Surname = Surname
             };
 
             _dbContext.Users.InsertOne(newUser);

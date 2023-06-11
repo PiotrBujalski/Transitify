@@ -17,5 +17,12 @@ namespace Transitify.Models
 
         [BsonElement("PasswordHash")]
         public string PasswordHash { get; set; }
+
+        [BsonElement("Name")]
+        public string Name { get; set; }
+
+        [BsonElement("Surname")]
+        public string Surname { get; set; }
+
     }
 }
