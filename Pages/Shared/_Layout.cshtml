@@ -22,6 +22,7 @@
                 {
                     <a class="navbar-brand" asp-area="" asp-page="/Tickets/MyTickets">Moje bilety</a>
                     <a class="navbar-brand" asp-area="" asp-page="/Tickets/Create">Utwórz bilet</a>
+                    <a class="navbar-brand" asp-area="" asp-page="/Account/AddBalance">Dodaj środki</a>
                 }
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
                     <ul class="navbar-nav">
@@ -43,6 +44,7 @@
                                 <div class="dropdown-menu" aria-labelledby="userDropdown">
                                     <button type="button" class="dropdown-item" onclick="window.location.href='@Url.Page("/Tickets/MyTickets")'">Moje bilety</button>
                                     <button type="button" class="dropdown-item" onclick="window.location.href='@Url.Page("/Tickets/Create")'">Utwórz bilet</button>
+                                    <button type="button" class="dropdown-item" onclick="window.location.href='@Url.Page("/Account/AddBalance")'">Dodaj środki</button>
                                     <form method="post" asp-page="/Account/Logout">
                                         <button type="submit" class="dropdown-item">Wyloguj</button>
                                     </form>
