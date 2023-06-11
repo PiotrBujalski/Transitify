@@ -47,6 +47,8 @@ namespace Transitify.Pages.Tickets
 
             Ticket.IsActive = false;
 
+            Ticket.IsPaid = false;
+
             if (Ticket.TicketGroup == "Miesięczny" && Ticket.TicketType == "Normalny")
             {
                 Ticket.TicketTimeMinutes = 30 * 24 * 60;

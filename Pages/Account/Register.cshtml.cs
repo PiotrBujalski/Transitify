@@ -86,7 +86,8 @@ namespace Transitify.Pages.Account
                 Username = Username,
                 PasswordHash = passwordHash,
                 Name = Name,
-                Surname = Surname
+                Surname = Surname,
+                Balance = 0
             };
 
             _dbContext.Users.InsertOne(newUser);
