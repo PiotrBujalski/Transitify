@@ -41,5 +41,9 @@ namespace Transitify.Models
 
         [BsonElement("IsActive")]
         public bool IsActive { get; set; }
+
+        [BsonElement("IsPaid")]
+        public bool IsPaid { get; set; }
+
     }
 }

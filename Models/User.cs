@@ -24,5 +24,8 @@ namespace Transitify.Models
         [BsonElement("Surname")]
         public string Surname { get; set; }
 
+        [BsonElement("Balance")]
+        public decimal Balance { get; set; }
+
     }
 }
