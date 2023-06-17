@@ -18,6 +18,7 @@ namespace Transitify.Pages.Tickets
             _dbContext = dbContext;
         }
         public List<Ticket> Tickets { get; set; }
+        public decimal UserBalance { get; set; }
 
         [TempData]
         public int ErrorTicketId { get; set; }
@@ -32,11 +33,23 @@ namespace Transitify.Pages.Tickets
             var parsedUserId = int.Parse(userId);
             Tickets = _dbContext.Tickets.Find(t => t.UserId == parsedUserId).ToList();
 
+            var user = _dbContext.Users.Find(u => u.UserId == parsedUserId).FirstOrDefault();
+            if (user != null)
+            {
+                UserBalance = user.Balance;
+            }
+
             return Page();
         }
         public IActionResult OnPost(int ticketId, int ticketTimeMinutes, decimal ticketPrice, string handler)
         {
             var ticket = _dbContext.Tickets.Find(t => t.TicketId == ticketId).FirstOrDefault();
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            User user = _dbContext.Users.Find(u => u.UserId == userId).FirstOrDefault();
+            if (user != null)
+            {
+                UserBalance = user.Balance;
+            }
             if (ticket != null)
             {
                 
@@ -49,9 +62,6 @@ namespace Transitify.Pages.Tickets
                 }                
                 else if (handler == "Pay")
                 {
-                    int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-                    User user = _dbContext.Users.Find(u => u.UserId == userId).FirstOrDefault();
-
                     if (user != null)
                     {
                         if (user.Balance >= ticketPrice)

@@ -17,6 +17,7 @@ namespace Transitify.Pages.Tickets
 
         [TempData]
         public bool IsCreateSuccessful { get; set; }
+        public decimal UserBalance { get; set; }
 
         public CreateModel(MongoDbContext dbContext)
         {
@@ -29,6 +30,16 @@ namespace Transitify.Pages.Tickets
             {
                 return Redirect("/Account/Login");
             }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var parsedUserId = int.Parse(userId);
+
+            var user = _dbContext.Users.Find(u => u.UserId == parsedUserId).FirstOrDefault();
+            if (user != null)
+            {
+                UserBalance = user.Balance;
+            }
+
             return Page();
         }
 
@@ -40,6 +51,13 @@ namespace Transitify.Pages.Tickets
             }
 
             int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            User user = _dbContext.Users.Find(u => u.UserId == userId).FirstOrDefault();
+
+            if (user != null)
+            {
+                UserBalance = user.Balance;
+            }
 
             Ticket.UserId = userId;
 

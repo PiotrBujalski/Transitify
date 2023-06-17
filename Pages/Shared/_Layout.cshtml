@@ -15,8 +15,8 @@
                 </a>
                 @if (!User.Identity.IsAuthenticated)
                 {
-                    <a class="navbar-brand" asp-area="" asp-page="/Index">Strona główna</a>
-                    <a class="navbar-brand" asp-area="" asp-page="/Privacy">Polityka prywatności</a>
+                    @*<a class="navbar-brand" asp-area="" asp-page="/Index">Strona główna</a>
+                    <a class="navbar-brand" asp-area="" asp-page="/Privacy">Polityka prywatności</a>*@
                 }
                 @if (User.Identity.IsAuthenticated)
                 {
@@ -42,6 +42,8 @@
                                     Witaj @User.Identity.Name!
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="userDropdown">
+                                    <span class="dropdown-item">Stan konta: @Model.UserBalance zł</span>
+                                    <div class="dropdown-divider"></div>
                                     <button type="button" class="dropdown-item" onclick="window.location.href='@Url.Page("/Tickets/MyTickets")'">Moje bilety</button>
                                     <button type="button" class="dropdown-item" onclick="window.location.href='@Url.Page("/Tickets/Create")'">Utwórz bilet</button>
                                     <button type="button" class="dropdown-item" onclick="window.location.href='@Url.Page("/Account/AddBalance")'">Dodaj środki</button>
