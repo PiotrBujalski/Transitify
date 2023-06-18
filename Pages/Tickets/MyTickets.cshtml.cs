@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MongoDB.Driver;
+using QRCoder;
 using Transitify.Data;
 using Transitify.Models;
 
@@ -55,9 +58,22 @@ namespace Transitify.Pages.Tickets
                 
                 if (handler == "Activate")
                 {
-                    ticket.TicketActivationDate = DateTime.Now.AddMinutes(120);
-                    ticket.TicketExpirationDate = DateTime.Now.AddMinutes(120+ticketTimeMinutes);
+                    ticket.TicketActivationDate = DateTime.Now;
+                    ticket.TicketExpirationDate = DateTime.Now.AddMinutes(ticketTimeMinutes);
                     ticket.IsActive = true;
+
+                    var qrGenerator = new QRCodeGenerator();
+                    var qrCodeData = qrGenerator.CreateQrCode($"Posiadacz biletu: {user.Name} {user.Surname}\nTyp biletu: {ticket.TicketType}\nOkres biletu: {ticket.TicketGroup}\nData wygaśnięcia: {ticket.TicketExpirationDate}\n", QRCodeGenerator.ECCLevel.Q);
+                    var qrCode = new QRCode(qrCodeData);
+                    var qrCodeImage = qrCode.GetGraphic(10);
+
+                    var stream = new MemoryStream();
+                    qrCodeImage.Save(stream, ImageFormat.Png);
+                    ticket.QRCodeImageBytes = stream.ToArray();
+
+                    ticket.TicketActivationDate = DateTime.Now.AddMinutes(120);
+                    ticket.TicketExpirationDate = DateTime.Now.AddMinutes(120 + ticketTimeMinutes);
+
                     _dbContext.Tickets.ReplaceOne(t => t.TicketId == ticketId, ticket);
                 }                
                 else if (handler == "Pay")
@@ -81,11 +97,6 @@ namespace Transitify.Pages.Tickets
                 {
                     return OnPostDelete(ticketId);
                 }
-                //else if (handler == "Details")
-                //{
-                //    return OnPostDetails(ticketId);
-                //}
-                //_dbContext.Tickets.ReplaceOne(t => t.TicketId == ticketId, ticket);
             }
 
             return Redirect("/Tickets/MyTickets");

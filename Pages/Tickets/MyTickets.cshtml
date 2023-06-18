@@ -190,8 +190,7 @@ else
                             }
                             else if (ticket.IsPaid && ticket.IsActive)
                             {
-                                <form method="post" asp-page-handler="Details">
-                                    <input type="hidden" name="ticketId" value="@ticket.TicketId" />
+                                <form method="post" onsubmit="openQRCodeWindow('@Convert.ToBase64String(ticket.QRCodeImageBytes)'); return false;">
                                     <button class="btn btn-primary" type="submit">Pokaż</button>
                                 </form>
                             }
@@ -204,3 +203,10 @@ else
     </table>
     </div>
 }
+
+<script>
+    function openQRCodeWindow(qrCodeData) {
+        var qrCodeWindow = window.open("", "_blank");
+        qrCodeWindow.document.write("<img src='data:image/png;base64," + qrCodeData + "' alt='QR Code' />");
+    }
+</script>

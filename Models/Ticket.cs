@@ -45,5 +45,7 @@ namespace Transitify.Models
         [BsonElement("IsPaid")]
         public bool IsPaid { get; set; }
 
+        [BsonElement("QRCodeImageBytes")]
+        public byte[] QRCodeImageBytes { get; set; }
     }
 }
